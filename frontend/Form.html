@@ -1,0 +1,2018 @@
+<!doctype html>
+<html>
+    <head>
+        <base target="_top" />
+        <meta name="viewport" content="width=device-width, initial-scale=1.0" />
+
+        <!-- SECURITY: Content Security Policy -->
+        <meta
+            http-equiv="Content-Security-Policy"
+            content="default-src 'self';
+                 script-src 'self' 'unsafe-inline' https://script.google.com https://script.googleusercontent.com;
+                 style-src 'self' 'unsafe-inline' https://fonts.googleapis.com;
+                 font-src 'self' https://fonts.gstatic.com;
+                 img-src 'self' data: https:;
+                 connect-src 'self' https://script.google.com;"
+        />
+
+        <style>
+            @import url("https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800;900&family=Space+Grotesk:wght@400;500;600;700&display=swap");
+
+            * {
+                margin: 0;
+                padding: 0;
+                box-sizing: border-box;
+            }
+
+            :root {
+                /* School Brand Colors - Customizable (TODO: Update with your school colors) */
+                --sidney-yellow: #ffd200;
+                --sidney-yellow-light: #ffe44d;
+                --sidney-yellow-dark: #cc9900;
+                --sidney-yellow-glow: rgba(255, 210, 0, 0.5);
+                --sidney-black: #0a0a0a;
+                --sidney-gray: #1a1a1a;
+                --sidney-gray-light: #2a2a2a;
+
+                /* Modern UI Colors */
+                --glass-bg: rgba(255, 255, 255, 0.08);
+                --glass-border: rgba(255, 255, 255, 0.18);
+                --glass-blur: blur(20px);
+                --card-bg: rgba(26, 26, 26, 0.95);
+                --input-bg: rgba(255, 255, 255, 0.05);
+                --input-border: rgba(255, 255, 255, 0.12);
+                --text-primary: #ffffff;
+                --text-secondary: rgba(255, 255, 255, 0.7);
+                --text-muted: rgba(255, 255, 255, 0.5);
+
+                /* Status Colors */
+                --success: #00ff88;
+                --success-glow: rgba(0, 255, 136, 0.3);
+                --error: #ff4757;
+                --error-glow: rgba(255, 71, 87, 0.3);
+                --warning: #ffd200;
+                --warning-glow: rgba(255, 210, 0, 0.3);
+
+                /* Shadows */
+                --shadow-sm: 0 2px 8px rgba(0, 0, 0, 0.3);
+                --shadow-md: 0 8px 24px rgba(0, 0, 0, 0.4);
+                --shadow-lg: 0 16px 48px rgba(0, 0, 0, 0.5);
+                --shadow-glow: 0 0 20px var(--sidney-yellow-glow);
+            }
+
+            body {
+                font-family:
+                    "Inter",
+                    -apple-system,
+                    BlinkMacSystemFont,
+                    sans-serif;
+                background: linear-gradient(
+                    135deg,
+                    #0a0a0a 0%,
+                    #1a1a1a 50%,
+                    #0a0a0a 100%
+                );
+                min-height: 100vh;
+                display: flex;
+                justify-content: center;
+                align-items: center;
+                padding: 20px;
+                position: relative;
+                overflow-x: hidden;
+            }
+
+            /* Animated Background Pattern */
+            body::before {
+                content: "";
+                position: fixed;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background:
+                    radial-gradient(
+                        circle at 20% 50%,
+                        var(--sidney-yellow-glow) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 80% 80%,
+                        var(--sidney-yellow-glow) 0%,
+                        transparent 50%
+                    ),
+                    radial-gradient(
+                        circle at 40% 20%,
+                        rgba(255, 210, 0, 0.1) 0%,
+                        transparent 30%
+                    );
+                animation: backgroundShift 20s ease-in-out infinite;
+                z-index: -1;
+                opacity: 0.4;
+            }
+
+            @keyframes backgroundShift {
+                0%,
+                100% {
+                    transform: translate(0, 0) rotate(0deg);
+                }
+                50% {
+                    transform: translate(-5%, -5%) rotate(5deg);
+                }
+            }
+
+            /* Hexagon Grid Pattern */
+            body::after {
+                content: "";
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background-image:
+                    linear-gradient(
+                        30deg,
+                        rgba(255, 210, 0, 0.03) 12%,
+                        transparent 12.5%,
+                        transparent 87%,
+                        rgba(255, 210, 0, 0.03) 87.5%,
+                        rgba(255, 210, 0, 0.03)
+                    ),
+                    linear-gradient(
+                        150deg,
+                        rgba(255, 210, 0, 0.03) 12%,
+                        transparent 12.5%,
+                        transparent 87%,
+                        rgba(255, 210, 0, 0.03) 87.5%,
+                        rgba(255, 210, 0, 0.03)
+                    ),
+                    linear-gradient(
+                        30deg,
+                        rgba(255, 210, 0, 0.03) 12%,
+                        transparent 12.5%,
+                        transparent 87%,
+                        rgba(255, 210, 0, 0.03) 87.5%,
+                        rgba(255, 210, 0, 0.03)
+                    ),
+                    linear-gradient(
+                        150deg,
+                        rgba(255, 210, 0, 0.03) 12%,
+                        transparent 12.5%,
+                        transparent 87%,
+                        rgba(255, 210, 0, 0.03) 87.5%,
+                        rgba(255, 210, 0, 0.03)
+                    );
+                background-size: 80px 140px;
+                background-position:
+                    0 0,
+                    0 0,
+                    40px 70px,
+                    40px 70px;
+                z-index: -1;
+                opacity: 0.3;
+            }
+
+            .container {
+                background: rgba(26, 26, 26, 0.98);
+                backdrop-filter: var(--glass-blur);
+                -webkit-backdrop-filter: var(--glass-blur);
+                border: 1px solid var(--glass-border);
+                border-radius: 32px;
+                box-shadow:
+                    var(--shadow-lg),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                max-width: 600px;
+                width: 100%;
+                overflow: hidden;
+                position: relative;
+                animation: containerFadeIn 0.8s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            /* Fallback for browsers without backdrop-filter support */
+            @supports not (backdrop-filter: blur(20px)) {
+                .container {
+                    background: rgba(26, 26, 26, 1);
+                }
+            }
+
+            @keyframes containerFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(30px) scale(0.95);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            /* Glowing Top Border */
+            .container::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 3px;
+                background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    var(--sidney-yellow) 50%,
+                    transparent 100%
+                );
+                animation: borderGlow 3s ease-in-out infinite;
+            }
+
+            @keyframes borderGlow {
+                0%,
+                100% {
+                    opacity: 0.5;
+                }
+                50% {
+                    opacity: 1;
+                }
+            }
+
+            /* School Header Section - Modern Glass Card */
+            .school-header {
+                background: linear-gradient(
+                    135deg,
+                    var(--card-bg) 0%,
+                    rgba(26, 26, 26, 0.8) 100%
+                );
+                border-bottom: 1px solid var(--glass-border);
+                padding: 40px;
+                text-align: center;
+                position: relative;
+                overflow: hidden;
+            }
+
+            .school-header::before {
+                content: "";
+                position: absolute;
+                top: -50%;
+                left: -50%;
+                width: 200%;
+                height: 200%;
+                background: radial-gradient(
+                    circle,
+                    var(--sidney-yellow-glow) 0%,
+                    transparent 70%
+                );
+                opacity: 0.15;
+                animation: headerPulse 4s ease-in-out infinite;
+            }
+
+            @keyframes headerPulse {
+                0%,
+                100% {
+                    transform: scale(1);
+                    opacity: 0.15;
+                }
+                50% {
+                    transform: scale(1.1);
+                    opacity: 0.25;
+                }
+            }
+
+            .school-logo-container {
+                position: relative;
+                z-index: 2;
+                margin-bottom: 16px;
+            }
+
+            .school-logo {
+                font-family: "Space Grotesk", sans-serif;
+                font-size: 36px;
+                font-weight: 700;
+                background: linear-gradient(
+                    135deg,
+                    var(--sidney-yellow) 0%,
+                    var(--sidney-yellow-light) 100%
+                );
+                -webkit-background-clip: text;
+                -webkit-text-fill-color: transparent;
+                background-clip: text;
+                text-shadow: 0 0 30px var(--sidney-yellow-glow);
+                letter-spacing: -1px;
+                position: relative;
+                display: inline-block;
+            }
+
+            .school-logo::after {
+                content: "";
+                position: absolute;
+                bottom: -8px;
+                left: 50%;
+                transform: translateX(-50%);
+                width: 60px;
+                height: 3px;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    var(--sidney-yellow),
+                    transparent
+                );
+                border-radius: 2px;
+            }
+
+            .school-info {
+                font-size: 15px;
+                font-weight: 500;
+                color: var(--text-secondary);
+                position: relative;
+                z-index: 2;
+                letter-spacing: 0.5px;
+                margin-bottom: 8px;
+            }
+
+            .mascot {
+                font-size: 13px;
+                font-weight: 600;
+                color: var(--text-muted);
+                position: relative;
+                z-index: 2;
+                letter-spacing: 2px;
+                text-transform: uppercase;
+            }
+
+            /* Bee Icon Animation */
+            .bee-icon {
+                display: inline-block;
+                font-size: 24px;
+                margin-left: 8px;
+                animation: beeFly 3s ease-in-out infinite;
+                filter: drop-shadow(0 0 8px var(--sidney-yellow-glow));
+            }
+
+            @keyframes beeFly {
+                0%,
+                100% {
+                    transform: translateY(0) rotate(0deg);
+                }
+                25% {
+                    transform: translateY(-5px) rotate(-5deg);
+                }
+                75% {
+                    transform: translateY(5px) rotate(5deg);
+                }
+            }
+
+            /* Form Content Area */
+            .form-content {
+                padding: 48px 40px;
+            }
+
+            h1 {
+                color: var(--text-primary);
+                margin-bottom: 8px;
+                font-size: 32px;
+                text-align: center;
+                font-family: "Space Grotesk", sans-serif;
+                font-weight: 700;
+                letter-spacing: -0.5px;
+            }
+
+            .subtitle {
+                color: var(--text-secondary);
+                text-align: center;
+                margin-bottom: 32px;
+                font-size: 15px;
+                font-weight: 500;
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 8px;
+            }
+
+            .live-badge {
+                display: inline-flex;
+                align-items: center;
+                gap: 6px;
+                background: linear-gradient(
+                    135deg,
+                    var(--sidney-yellow) 0%,
+                    var(--sidney-yellow-light) 100%
+                );
+                color: var(--sidney-black);
+                padding: 4px 12px;
+                border-radius: 20px;
+                font-size: 11px;
+                font-weight: 700;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+                box-shadow: 0 0 20px var(--sidney-yellow-glow);
+                animation: badgePulse 2s ease-in-out infinite;
+            }
+
+            @keyframes badgePulse {
+                0%,
+                100% {
+                    transform: scale(1);
+                }
+                50% {
+                    transform: scale(1.05);
+                }
+            }
+
+            .live-dot {
+                width: 6px;
+                height: 6px;
+                background: var(--sidney-black);
+                border-radius: 50%;
+                animation: dotBlink 1.5s ease-in-out infinite;
+            }
+
+            @keyframes dotBlink {
+                0%,
+                100% {
+                    opacity: 1;
+                }
+                50% {
+                    opacity: 0.3;
+                }
+            }
+
+            /* Warning Banner - Modern Glass Style */
+            .warning-banner {
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 210, 0, 0.15) 0%,
+                    rgba(255, 210, 0, 0.08) 100%
+                );
+                border: 1px solid rgba(255, 210, 0, 0.3);
+                border-left: 4px solid var(--sidney-yellow);
+                padding: 16px 20px;
+                border-radius: 16px;
+                margin-bottom: 32px;
+                font-size: 13px;
+                color: var(--text-secondary);
+                backdrop-filter: blur(10px);
+                display: flex;
+                align-items: start;
+                gap: 12px;
+                animation: warningSlideIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.3s
+                    backwards;
+            }
+
+            @keyframes warningSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateX(-20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateX(0);
+                }
+            }
+
+            .warning-icon {
+                font-size: 20px;
+                line-height: 1;
+                filter: drop-shadow(0 0 8px var(--sidney-yellow-glow));
+            }
+
+            .warning-banner strong {
+                color: var(--sidney-yellow);
+                font-weight: 700;
+            }
+
+            /* Form Groups - Modern Card Style */
+            .form-group {
+                margin-bottom: 28px;
+                animation: formGroupFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1)
+                    backwards;
+            }
+
+            .form-group:nth-child(1) {
+                animation-delay: 0.1s;
+            }
+            .form-group:nth-child(2) {
+                animation-delay: 0.2s;
+            }
+            .form-group:nth-child(3) {
+                animation-delay: 0.3s;
+            }
+            .form-group:nth-child(4) {
+                animation-delay: 0.4s;
+            }
+
+            @keyframes formGroupFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            label {
+                display: flex;
+                align-items: center;
+                gap: 8px;
+                margin-bottom: 10px;
+                color: var(--text-primary);
+                font-weight: 600;
+                font-size: 14px;
+                letter-spacing: 0.3px;
+                text-transform: uppercase;
+            }
+
+            label::before {
+                content: "";
+                width: 3px;
+                height: 16px;
+                background: linear-gradient(
+                    180deg,
+                    var(--sidney-yellow),
+                    var(--sidney-yellow-dark)
+                );
+                border-radius: 2px;
+            }
+
+            /* Modern Input Styling */
+            input[type="text"],
+            input[type="email"],
+            select {
+                width: 100%;
+                padding: 16px 18px;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid var(--input-border);
+                border-radius: 16px;
+                font-size: 15px;
+                font-family: "Inter", sans-serif;
+                font-weight: 500;
+                color: var(--text-primary);
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                backdrop-filter: blur(10px);
+            }
+
+            /* Input fallback for mobile/unsupported browsers */
+            @supports not (backdrop-filter: blur(10px)) {
+                input[type="text"],
+                input[type="email"],
+                select {
+                    background: rgba(40, 40, 40, 1);
+                }
+            }
+
+            input[type="text"]::placeholder,
+            input[type="email"]::placeholder {
+                color: var(--text-muted);
+                font-weight: 400;
+            }
+
+            input[type="text"]:hover,
+            input[type="email"]:hover,
+            select:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            input[type="text"]:focus,
+            input[type="email"]:focus,
+            select:focus {
+                outline: none;
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--sidney-yellow);
+                box-shadow:
+                    0 0 0 3px rgba(255, 210, 0, 0.15),
+                    0 8px 24px rgba(0, 0, 0, 0.3),
+                    inset 0 1px 0 rgba(255, 255, 255, 0.1);
+                transform: translateY(-2px);
+            }
+
+            /* Email Input Group */
+            .email-input-group {
+                display: flex;
+                align-items: stretch;
+                background: rgba(255, 255, 255, 0.08);
+                border: 1px solid var(--input-border);
+                border-radius: 16px;
+                overflow: hidden;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            @supports not (backdrop-filter: blur(10px)) {
+                .email-input-group {
+                    background: rgba(40, 40, 40, 1);
+                }
+            }
+
+            .email-input-group:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .email-input-group:focus-within {
+                background: rgba(255, 255, 255, 0.1);
+                border-color: var(--sidney-yellow);
+                box-shadow:
+                    0 0 0 3px rgba(255, 210, 0, 0.15),
+                    0 8px 24px rgba(0, 0, 0, 0.3);
+                transform: translateY(-2px);
+            }
+
+            .email-input-group input {
+                background: transparent;
+                border: none;
+                flex: 1;
+                padding: 16px 18px;
+            }
+
+            .email-input-group input:focus {
+                box-shadow: none;
+                transform: none;
+            }
+
+            .email-domain {
+                display: flex;
+                align-items: center;
+                padding: 0 18px;
+                color: var(--text-muted);
+                font-size: 15px;
+                font-weight: 500;
+                border-left: 1px solid var(--input-border);
+                background: rgba(255, 255, 255, 0.03);
+            }
+
+            /* Autocomplete Dropdown - Modern Glass */
+            .autocomplete-wrapper {
+                position: relative;
+            }
+
+            .autocomplete-items {
+                position: absolute;
+                background: rgba(20, 20, 20, 1);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 16px;
+                z-index: 99;
+                top: calc(100% + 8px);
+                left: 0;
+                right: 0;
+                max-height: 320px;
+                overflow-y: auto;
+                box-shadow: var(--shadow-lg);
+                display: none;
+                animation: dropdownSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            @supports not (backdrop-filter: blur(20px)) {
+                .autocomplete-items {
+                    background: rgba(20, 20, 20, 1);
+                }
+            }
+
+            @keyframes dropdownSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .autocomplete-items::-webkit-scrollbar {
+                width: 8px;
+            }
+
+            .autocomplete-items::-webkit-scrollbar-track {
+                background: rgba(255, 255, 255, 0.05);
+                border-radius: 4px;
+            }
+
+            .autocomplete-items::-webkit-scrollbar-thumb {
+                background: var(--sidney-yellow);
+                border-radius: 4px;
+            }
+
+            .autocomplete-items div {
+                padding: 16px;
+                cursor: pointer;
+                border-bottom: 1px solid rgba(255, 255, 255, 0.05);
+                transition: all 0.2s ease;
+            }
+
+            .autocomplete-items div:last-child {
+                border-bottom: none;
+            }
+
+            .autocomplete-items div:hover {
+                background: rgba(255, 255, 255, 0.08);
+                transform: translateX(4px);
+            }
+
+            .autocomplete-items div.active {
+                background: linear-gradient(
+                    90deg,
+                    rgba(255, 210, 0, 0.2),
+                    rgba(255, 210, 0, 0.1)
+                );
+                border-left: 3px solid var(--sidney-yellow);
+            }
+
+            .autocomplete-items div.disabled-asset {
+                opacity: 0.4;
+                cursor: not-allowed;
+                background: rgba(255, 255, 255, 0.02);
+            }
+
+            .autocomplete-items div.disabled-asset:hover {
+                background: rgba(255, 255, 255, 0.02);
+                transform: none;
+            }
+
+            .asset-item {
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+                gap: 16px;
+            }
+
+            .asset-tag {
+                font-weight: 700;
+                font-size: 16px;
+                color: var(--text-primary);
+                font-family: "Space Grotesk", monospace;
+            }
+
+            .asset-details {
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-top: 4px;
+                font-weight: 400;
+            }
+
+            .asset-status {
+                padding: 4px 10px;
+                border-radius: 8px;
+                font-size: 11px;
+                font-weight: 700;
+                white-space: nowrap;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .status-available {
+                background: rgba(0, 255, 136, 0.2);
+                color: var(--success);
+                box-shadow: 0 0 12px var(--success-glow);
+            }
+
+            .status-checked-out {
+                background: rgba(255, 210, 0, 0.2);
+                color: var(--sidney-yellow);
+                box-shadow: 0 0 12px var(--warning-glow);
+            }
+
+            .status-disabled {
+                background: rgba(255, 71, 87, 0.2);
+                color: var(--error);
+                box-shadow: 0 0 12px var(--error-glow);
+            }
+
+            /* Verification Status - Modern Cards */
+            .verification-status {
+                margin-top: 12px;
+                padding: 14px 16px;
+                border-radius: 12px;
+                font-size: 13px;
+                font-weight: 600;
+                display: none;
+                backdrop-filter: blur(10px);
+                border: 1px solid;
+                animation: statusSlideIn 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            @keyframes statusSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(-10px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .verification-status.valid {
+                background: rgba(0, 255, 136, 0.15);
+                color: var(--success);
+                border-color: var(--success);
+                box-shadow: 0 0 16px var(--success-glow);
+            }
+
+            .verification-status.invalid {
+                background: rgba(255, 71, 87, 0.15);
+                color: var(--error);
+                border-color: var(--error);
+                box-shadow: 0 0 16px var(--error-glow);
+            }
+
+            .verification-status.checking {
+                background: rgba(255, 210, 0, 0.15);
+                color: var(--sidney-yellow);
+                border-color: var(--sidney-yellow);
+                box-shadow: 0 0 16px var(--warning-glow);
+            }
+
+            /* Radio Buttons - Modern Toggle Style */
+            .radio-group {
+                display: flex;
+                gap: 16px;
+                margin-top: 12px;
+            }
+
+            .radio-option {
+                flex: 1;
+                position: relative;
+            }
+
+            .radio-option input[type="radio"] {
+                position: absolute;
+                opacity: 0;
+                cursor: pointer;
+            }
+
+            .radio-option label {
+                display: flex;
+                align-items: center;
+                justify-content: center;
+                gap: 10px;
+                padding: 16px 20px;
+                background: var(--input-bg);
+                border: 1px solid var(--input-border);
+                border-radius: 12px;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                text-transform: uppercase;
+                font-weight: 600;
+                font-size: 13px;
+                letter-spacing: 0.5px;
+                color: var(--text-secondary);
+            }
+
+            .radio-option label::before {
+                display: none;
+            }
+
+            .radio-option input[type="radio"]:checked + label {
+                background: linear-gradient(
+                    135deg,
+                    rgba(255, 210, 0, 0.2),
+                    rgba(255, 210, 0, 0.1)
+                );
+                border-color: var(--sidney-yellow);
+                color: var(--text-primary);
+                box-shadow:
+                    0 0 20px var(--sidney-yellow-glow),
+                    0 4px 16px rgba(0, 0, 0, 0.3);
+                transform: translateY(-2px);
+            }
+
+            .radio-option label:hover {
+                background: rgba(255, 255, 255, 0.08);
+                border-color: rgba(255, 255, 255, 0.2);
+            }
+
+            .radio-icon {
+                font-size: 18px;
+                filter: drop-shadow(0 0 8px var(--sidney-yellow-glow));
+            }
+
+            /* Submit Button - Futuristic Glow */
+            button.submit-btn {
+                width: 100%;
+                padding: 18px 28px;
+                background: linear-gradient(
+                    135deg,
+                    var(--sidney-yellow) 0%,
+                    var(--sidney-yellow-dark) 100%
+                );
+                color: var(--sidney-black);
+                border: none;
+                border-radius: 16px;
+                font-size: 16px;
+                font-weight: 800;
+                font-family: "Space Grotesk", sans-serif;
+                cursor: pointer;
+                transition: all 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+                text-transform: uppercase;
+                letter-spacing: 1px;
+                position: relative;
+                overflow: hidden;
+                box-shadow: var(--shadow-glow), var(--shadow-md);
+                animation: buttonFadeIn 0.6s cubic-bezier(0.4, 0, 0.2, 1) 0.5s
+                    backwards;
+            }
+
+            @keyframes buttonFadeIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            button.submit-btn::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: -100%;
+                width: 100%;
+                height: 100%;
+                background: linear-gradient(
+                    90deg,
+                    transparent,
+                    rgba(255, 255, 255, 0.3),
+                    transparent
+                );
+                transition: left 0.6s;
+            }
+
+            button.submit-btn::after {
+                content: "";
+                position: absolute;
+                inset: 0;
+                border-radius: 16px;
+                padding: 2px;
+                background: linear-gradient(
+                    135deg,
+                    var(--sidney-yellow-light),
+                    var(--sidney-yellow),
+                    var(--sidney-yellow-dark)
+                );
+                -webkit-mask:
+                    linear-gradient(#fff 0 0) content-box,
+                    linear-gradient(#fff 0 0);
+                -webkit-mask-composite: xor;
+                mask-composite: exclude;
+                opacity: 0;
+                transition: opacity 0.3s;
+            }
+
+            button.submit-btn:hover:not(:disabled) {
+                transform: translateY(-4px) scale(1.02);
+                box-shadow:
+                    0 0 40px var(--sidney-yellow-glow),
+                    0 12px 32px rgba(0, 0, 0, 0.5);
+            }
+
+            button.submit-btn:hover:not(:disabled)::before {
+                left: 100%;
+            }
+
+            button.submit-btn:hover:not(:disabled)::after {
+                opacity: 1;
+            }
+
+            button.submit-btn:active:not(:disabled) {
+                transform: translateY(-2px) scale(0.98);
+            }
+
+            button.submit-btn:disabled {
+                background: rgba(255, 255, 255, 0.1);
+                color: var(--text-muted);
+                cursor: not-allowed;
+                transform: none;
+                box-shadow: none;
+            }
+
+            /* Messages - Modern Alert Cards */
+            .message {
+                padding: 18px 22px;
+                border-radius: 16px;
+                margin-top: 28px;
+                font-size: 14px;
+                font-weight: 600;
+                display: none;
+                border-left: 4px solid;
+                backdrop-filter: blur(10px);
+                animation: messageSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            @keyframes messageSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(20px);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0);
+                }
+            }
+
+            .message.success {
+                background: rgba(0, 255, 136, 0.15);
+                color: var(--success);
+                border-color: var(--success);
+                box-shadow: 0 0 24px var(--success-glow);
+            }
+
+            .message.error {
+                background: rgba(255, 71, 87, 0.15);
+                color: var(--error);
+                border-color: var(--error);
+                box-shadow: 0 0 24px var(--error-glow);
+            }
+
+            .helper-text {
+                font-size: 12px;
+                color: var(--text-muted);
+                margin-top: 8px;
+                font-weight: 400;
+            }
+
+            .loading-text {
+                font-size: 12px;
+                color: var(--sidney-yellow);
+                margin-top: 8px;
+                font-style: italic;
+                font-weight: 600;
+                display: flex;
+                align-items: center;
+                gap: 8px;
+            }
+
+            .loading-spinner {
+                width: 14px;
+                height: 14px;
+                border: 2px solid rgba(255, 210, 0, 0.2);
+                border-top-color: var(--sidney-yellow);
+                border-radius: 50%;
+                animation: spin 0.8s linear infinite;
+            }
+
+            @keyframes spin {
+                to {
+                    transform: rotate(360deg);
+                }
+            }
+
+            /* Confirmation Modal - Futuristic Overlay */
+            .confirmation-modal {
+                display: none;
+                position: fixed;
+                top: 0;
+                left: 0;
+                width: 100%;
+                height: 100%;
+                background: rgba(0, 0, 0, 0.92);
+                z-index: 1000;
+                justify-content: center;
+                align-items: center;
+                backdrop-filter: blur(8px);
+                animation: modalFadeIn 0.3s ease;
+            }
+
+            @supports not (backdrop-filter: blur(8px)) {
+                .confirmation-modal {
+                    background: rgba(0, 0, 0, 0.95);
+                }
+            }
+
+            @keyframes modalFadeIn {
+                from {
+                    opacity: 0;
+                }
+                to {
+                    opacity: 1;
+                }
+            }
+
+            .confirmation-content {
+                background: rgba(26, 26, 26, 1);
+                backdrop-filter: blur(20px);
+                border: 1px solid var(--glass-border);
+                border-radius: 28px;
+                padding: 48px;
+                max-width: 540px;
+                width: 90%;
+                box-shadow:
+                    var(--shadow-lg),
+                    0 0 60px var(--sidney-yellow-glow);
+                position: relative;
+                overflow: hidden;
+                animation: modalSlideIn 0.4s cubic-bezier(0.4, 0, 0.2, 1);
+            }
+
+            @supports not (backdrop-filter: blur(20px)) {
+                .confirmation-content {
+                    background: rgba(26, 26, 26, 1);
+                }
+            }
+
+            @keyframes modalSlideIn {
+                from {
+                    opacity: 0;
+                    transform: translateY(40px) scale(0.9);
+                }
+                to {
+                    opacity: 1;
+                    transform: translateY(0) scale(1);
+                }
+            }
+
+            .confirmation-content::before {
+                content: "";
+                position: absolute;
+                top: 0;
+                left: 0;
+                right: 0;
+                height: 4px;
+                background: linear-gradient(
+                    90deg,
+                    transparent 0%,
+                    var(--sidney-yellow) 50%,
+                    transparent 100%
+                );
+            }
+
+            .confirmation-content h2 {
+                color: var(--text-primary);
+                margin-bottom: 28px;
+                font-size: 28px;
+                font-family: "Space Grotesk", sans-serif;
+                font-weight: 700;
+                text-align: center;
+                letter-spacing: -0.5px;
+            }
+
+            .confirmation-details {
+                background: rgba(255, 255, 255, 0.05);
+                border: 1px solid var(--input-border);
+                padding: 24px;
+                border-radius: 16px;
+                margin-bottom: 28px;
+                border-left: 4px solid var(--sidney-yellow);
+            }
+
+            .confirmation-details p {
+                margin: 12px 0;
+                color: var(--text-secondary);
+                font-size: 14px;
+                display: flex;
+                justify-content: space-between;
+                align-items: center;
+            }
+
+            .confirmation-details strong {
+                color: var(--text-muted);
+                font-weight: 600;
+                font-size: 12px;
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .confirmation-details span {
+                color: var(--text-primary);
+                font-weight: 600;
+            }
+
+            .confirmation-buttons {
+                display: flex;
+                gap: 16px;
+            }
+
+            .confirmation-buttons button {
+                flex: 1;
+                padding: 16px 24px;
+                border: none;
+                border-radius: 14px;
+                font-size: 15px;
+                font-weight: 700;
+                font-family: "Inter", sans-serif;
+                cursor: pointer;
+                transition: all 0.3s cubic-bezier(0.4, 0, 0.2, 1);
+                text-transform: uppercase;
+                letter-spacing: 0.5px;
+            }
+
+            .confirm-yes {
+                background: linear-gradient(
+                    135deg,
+                    var(--sidney-yellow) 0%,
+                    var(--sidney-yellow-dark) 100%
+                );
+                color: var(--sidney-black);
+                box-shadow: 0 0 20px var(--sidney-yellow-glow);
+            }
+
+            .confirm-yes:hover {
+                transform: translateY(-3px);
+                box-shadow:
+                    0 0 30px var(--sidney-yellow-glow),
+                    0 8px 24px rgba(0, 0, 0, 0.4);
+            }
+
+            .confirm-no {
+                background: rgba(255, 255, 255, 0.08);
+                color: var(--text-primary);
+                border: 1px solid var(--input-border);
+            }
+
+            .confirm-no:hover {
+                background: rgba(255, 255, 255, 0.12);
+                transform: translateY(-3px);
+                box-shadow: 0 8px 24px rgba(0, 0, 0, 0.3);
+            }
+
+            /* Mobile Responsive */
+            @media (max-width: 768px) {
+                body {
+                    padding: 12px;
+                    align-items: flex-start;
+                    padding-top: 20px;
+                }
+
+                .container {
+                    border-radius: 24px;
+                    max-width: 100%;
+                }
+
+                .school-header {
+                    padding: 24px 20px;
+                }
+
+                .school-logo {
+                    font-size: 24px;
+                }
+
+                .school-info {
+                    font-size: 13px;
+                }
+
+                .mascot {
+                    font-size: 11px;
+                }
+
+                .form-content {
+                    padding: 24px 20px;
+                }
+
+                h1 {
+                    font-size: 24px;
+                }
+
+                .subtitle {
+                    font-size: 13px;
+                    flex-direction: column;
+                    gap: 6px;
+                }
+
+                .warning-banner {
+                    padding: 12px 16px;
+                    font-size: 12px;
+                    gap: 10px;
+                }
+
+                label {
+                    font-size: 12px;
+                }
+
+                input[type="text"],
+                input[type="email"],
+                select {
+                    padding: 14px 16px;
+                    font-size: 14px;
+                    border-radius: 12px;
+                }
+
+                .email-input-group input {
+                    padding: 14px 16px;
+                }
+
+                .email-domain {
+                    padding: 0 12px;
+                    font-size: 13px;
+                }
+
+                .helper-text {
+                    font-size: 11px;
+                }
+
+                .autocomplete-items {
+                    border-radius: 12px;
+                    max-height: 240px;
+                }
+
+                .autocomplete-items div {
+                    padding: 12px;
+                }
+
+                .asset-tag {
+                    font-size: 14px;
+                }
+
+                .asset-details {
+                    font-size: 11px;
+                }
+
+                .asset-status {
+                    font-size: 10px;
+                    padding: 3px 8px;
+                }
+
+                .radio-group {
+                    flex-direction: column;
+                    gap: 10px;
+                }
+
+                .radio-option label {
+                    padding: 14px 16px;
+                    font-size: 12px;
+                }
+
+                button.submit-btn {
+                    padding: 16px 24px;
+                    font-size: 14px;
+                    border-radius: 12px;
+                }
+
+                .confirmation-content {
+                    padding: 24px 20px;
+                    margin: 12px;
+                    border-radius: 20px;
+                }
+
+                .confirmation-content h2 {
+                    font-size: 20px;
+                    margin-bottom: 20px;
+                }
+
+                .confirmation-details {
+                    padding: 16px;
+                    font-size: 13px;
+                }
+
+                .confirmation-details p {
+                    font-size: 13px;
+                    margin: 10px 0;
+                }
+
+                .confirmation-buttons {
+                    flex-direction: column;
+                    gap: 12px;
+                }
+
+                .confirmation-buttons button {
+                    padding: 14px 20px;
+                    font-size: 13px;
+                }
+
+                .message {
+                    padding: 14px 16px;
+                    font-size: 13px;
+                }
+
+                .verification-status {
+                    padding: 12px 14px;
+                    font-size: 12px;
+                }
+            }
+
+            /* Extra small devices */
+            @media (max-width: 400px) {
+                body {
+                    padding: 8px;
+                }
+
+                .school-logo {
+                    font-size: 20px;
+                }
+
+                h1 {
+                    font-size: 20px;
+                }
+
+                .form-content {
+                    padding: 20px 16px;
+                }
+
+                .school-header {
+                    padding: 20px 16px;
+                }
+
+                input[type="text"],
+                input[type="email"],
+                select {
+                    padding: 12px 14px;
+                    font-size: 13px;
+                }
+
+                button.submit-btn {
+                    padding: 14px 20px;
+                    font-size: 13px;
+                }
+            }
+        </style>
+    </head>
+    <body>
+        <div class="container">
+            <!-- School Header - Modern Glass Card (TODO: Customize with your school name) -->
+            <div class="school-header">
+                <div class="school-logo-container">
+                    <div class="school-logo">Your School Name</div>
+                </div>
+                <div class="school-info">Technology Department</div>
+                <div class="mascot">Your Mascot</div>
+            </div>
+
+            <!-- Form Content -->
+            <div class="form-content">
+                <h1>Device Checkout</h1>
+                <div class="subtitle">
+                    Powered by IncidentIQ
+                    <span class="live-badge">
+                        <span class="live-dot"></span>
+                        LIVE
+                    </span>
+                </div>
+
+                <!-- SECURITY: Warning banner -->
+                <div class="warning-banner">
+                    <div class="warning-icon">!</div>
+                    <div>
+                        <strong>Important:</strong> All transactions are logged
+                        and monitored. Fraudulent checkouts will result in
+                        disciplinary action. Use only your own email address.
+                    </div>
+                </div>
+
+                <form id="checkoutForm">
+                    <div class="form-group">
+                        <label for="studentEmail"> Student Email </label>
+                        <div class="email-input-group">
+                            <input
+                                type="text"
+                                id="studentEmail"
+                                name="studentEmail"
+                                required
+                                placeholder="12.firstname.lastname"
+                                autocomplete="off"
+                            />
+                            <span class="email-domain"
+                                >@yourschool.org</span
+                            >
+                        </div>
+                        <div class="helper-text">
+                            Enter your email username (e.g.,
+                            12.firstname.lastname)
+                        </div>
+                    </div>
+
+                    <div class="form-group">
+                        <label for="assetTag"> Asset Tag </label>
+                        <div class="autocomplete-wrapper">
+                            <input
+                                type="text"
+                                id="assetTag"
+                                name="assetTag"
+                                required
+                                placeholder="Enter 6-digit asset tag: 123456"
+                                pattern="\d{6}"
+                                maxlength="6"
+                                autocomplete="off"
+                            />
+                            <div
+                                id="autocompleteItems"
+                                class="autocomplete-items"
+                            ></div>
+                        </div>
+                        <div class="helper-text">
+                            Type to search inventory, or enter 6-digit asset tag
+                        </div>
+                        <div
+                            id="loadingText"
+                            class="loading-text"
+                            style="display: none"
+                        >
+                            <div class="loading-spinner"></div>
+                            Loading from IncidentIQ...
+                        </div>
+                        <div
+                            id="verificationStatus"
+                            class="verification-status"
+                        ></div>
+                    </div>
+
+                    <div class="form-group">
+                        <label> Action </label>
+                        <div class="radio-group">
+                            <div class="radio-option">
+                                <input
+                                    type="radio"
+                                    id="checkout"
+                                    name="action"
+                                    value="Check Out"
+                                    required
+                                />
+                                <label for="checkout"> Check Out </label>
+                            </div>
+                            <div class="radio-option">
+                                <input
+                                    type="radio"
+                                    id="return"
+                                    name="action"
+                                    value="Return"
+                                />
+                                <label for="return"> Return </label>
+                            </div>
+                        </div>
+                    </div>
+
+                    <button type="submit" class="submit-btn" id="submitBtn">
+                        Review & Submit
+                    </button>
+
+                    <div id="message" class="message"></div>
+                </form>
+            </div>
+        </div>
+
+        <!-- Confirmation Modal - Futuristic Style -->
+        <div id="confirmationModal" class="confirmation-modal">
+            <div class="confirmation-content">
+                <h2>⚠️ Confirm Transaction</h2>
+                <div
+                    class="confirmation-details"
+                    id="confirmationDetails"
+                ></div>
+                <div class="confirmation-buttons">
+                    <button type="button" class="confirm-yes" id="confirmYes">
+                        ✓ Confirm
+                    </button>
+                    <button type="button" class="confirm-no" id="confirmNo">
+                        ✗ Cancel
+                    </button>
+                </div>
+            </div>
+        </div>
+
+        <script>
+            // Use same JavaScript as FORM.HTML (functionality unchanged, only styling updated)
+            var form = document.getElementById("checkoutForm");
+            var submitBtn = document.getElementById("submitBtn");
+            var messageDiv = document.getElementById("message");
+            var assetTagInput = document.getElementById("assetTag");
+            var autocompleteItems =
+                document.getElementById("autocompleteItems");
+            var verificationStatus =
+                document.getElementById("verificationStatus");
+            var loadingText = document.getElementById("loadingText");
+            var confirmationModal =
+                document.getElementById("confirmationModal");
+            var confirmationDetails = document.getElementById(
+                "confirmationDetails",
+            );
+            var confirmYes = document.getElementById("confirmYes");
+            var confirmNo = document.getElementById("confirmNo");
+
+            var allAssets = [];
+            var verificationTimeout;
+            var lastVerifiedAsset = null;
+            var formDataToSubmit = null;
+            var currentFocus = -1;
+            var autocompleteTimeout;
+
+            function htmlEncode(str) {
+                if (!str) return "";
+                var div = document.createElement("div");
+                div.textContent = str;
+                return div.innerHTML;
+            }
+
+            function debounce(func, wait) {
+                return function executedFunction(...args) {
+                    const later = () => {
+                        clearTimeout(autocompleteTimeout);
+                        func(...args);
+                    };
+                    clearTimeout(autocompleteTimeout);
+                    autocompleteTimeout = setTimeout(later, wait);
+                };
+            }
+
+            window.addEventListener("load", function () {
+                loadingText.style.display = "flex";
+                google.script.run
+                    .withSuccessHandler(function (assets) {
+                        allAssets = assets;
+                        loadingText.style.display = "none";
+                        if (assets.length === 0) {
+                            loadingText.innerHTML =
+                                '<div class="loading-spinner"></div> No assets loaded. Manual entry available.';
+                            loadingText.style.display = "flex";
+                        } else {
+                            loadingText.innerHTML =
+                                "Loaded " + assets.length + " devices ✓";
+                            loadingText.style.color = "var(--success)";
+                            loadingText.style.display = "flex";
+                            setTimeout(function () {
+                                loadingText.style.display = "none";
+                            }, 3000);
+                        }
+                    })
+                    .withFailureHandler(function (error) {
+                        loadingText.innerHTML =
+                            '<div class="loading-spinner"></div> Connection failed. Manual entry available.';
+                        loadingText.style.display = "flex";
+                    })
+                    .getAllAssetTags();
+            });
+
+            const debouncedAutocomplete = debounce(showAutocomplete, 200);
+
+            assetTagInput.addEventListener("input", function (e) {
+                var value = e.target.value.replace(/[^0-9]/g, "");
+                e.target.value = value.substring(0, 6);
+
+                debouncedAutocomplete(value);
+
+                clearTimeout(verificationTimeout);
+                if (value.length === 6) {
+                    verificationTimeout = setTimeout(function () {
+                        verifyAssetTagRealtime(value);
+                    }, 500);
+                } else {
+                    verificationStatus.style.display = "none";
+                    lastVerifiedAsset = null;
+                }
+            });
+
+            assetTagInput.addEventListener("keydown", function (e) {
+                var items = autocompleteItems.getElementsByTagName("div");
+                if (e.keyCode === 40) {
+                    currentFocus++;
+                    addActive(items);
+                    e.preventDefault();
+                } else if (e.keyCode === 38) {
+                    currentFocus--;
+                    addActive(items);
+                    e.preventDefault();
+                } else if (e.keyCode === 13) {
+                    e.preventDefault();
+                    if (currentFocus > -1 && items[currentFocus]) {
+                        items[currentFocus].click();
+                    }
+                }
+            });
+
+            function addActive(items) {
+                if (!items || items.length === 0) return;
+                removeActive(items);
+                if (currentFocus >= items.length) currentFocus = 0;
+                if (currentFocus < 0) currentFocus = items.length - 1;
+
+                var attempts = 0;
+                while (
+                    items[currentFocus].classList.contains("disabled-asset") &&
+                    attempts < items.length
+                ) {
+                    currentFocus++;
+                    if (currentFocus >= items.length) currentFocus = 0;
+                    attempts++;
+                }
+
+                if (!items[currentFocus].classList.contains("disabled-asset")) {
+                    items[currentFocus].classList.add("active");
+                }
+            }
+
+            function removeActive(items) {
+                for (var i = 0; i < items.length; i++) {
+                    items[i].classList.remove("active");
+                }
+            }
+
+            function showAutocomplete(searchTerm) {
+                autocompleteItems.innerHTML = "";
+                currentFocus = -1;
+
+                if (searchTerm.length < 2) {
+                    autocompleteItems.style.display = "none";
+                    return;
+                }
+
+                var matches = allAssets
+                    .filter(function (asset) {
+                        return (
+                            asset.assetTag.includes(searchTerm) ||
+                            (asset.serialNumber &&
+                                asset.serialNumber.includes(searchTerm))
+                        );
+                    })
+                    .slice(0, 10);
+
+                if (matches.length === 0) {
+                    autocompleteItems.style.display = "none";
+                    return;
+                }
+
+                matches.forEach(function (asset) {
+                    var div = document.createElement("div");
+
+                    var statusClass, statusText;
+                    if (asset.disabled) {
+                        statusClass = "status-disabled";
+                        statusText = "Disabled";
+                        div.classList.add("disabled-asset");
+                    } else if (asset.status === "Available") {
+                        statusClass = "status-available";
+                        statusText = "Available";
+                    } else {
+                        statusClass = "status-checked-out";
+                        statusText = "Checked Out";
+                    }
+
+                    var assetItemDiv = document.createElement("div");
+                    assetItemDiv.className = "asset-item";
+
+                    var contentDiv = document.createElement("div");
+
+                    var assetTagDiv = document.createElement("div");
+                    assetTagDiv.className = "asset-tag";
+                    assetTagDiv.textContent = asset.assetTag;
+
+                    var assetDetailsDiv = document.createElement("div");
+                    assetDetailsDiv.className = "asset-details";
+                    var detailsText = asset.deviceType + " | " + asset.model;
+                    if (asset.serialNumber) {
+                        detailsText += " | SN: " + asset.serialNumber;
+                    }
+                    assetDetailsDiv.textContent = detailsText;
+
+                    var statusSpan = document.createElement("span");
+                    statusSpan.className = "asset-status " + statusClass;
+                    statusSpan.textContent = statusText;
+
+                    contentDiv.appendChild(assetTagDiv);
+                    contentDiv.appendChild(assetDetailsDiv);
+                    assetItemDiv.appendChild(contentDiv);
+                    assetItemDiv.appendChild(statusSpan);
+                    div.appendChild(assetItemDiv);
+
+                    if (!asset.disabled) {
+                        div.addEventListener("click", function () {
+                            assetTagInput.value = asset.assetTag;
+                            autocompleteItems.style.display = "none";
+                            verifyAssetTagRealtime(asset.assetTag);
+                        });
+                    }
+
+                    autocompleteItems.appendChild(div);
+                });
+
+                autocompleteItems.style.display = "block";
+            }
+
+            document.addEventListener("click", function (e) {
+                if (e.target !== assetTagInput) {
+                    autocompleteItems.style.display = "none";
+                }
+            });
+
+            function verifyAssetTagRealtime(assetTag) {
+                verificationStatus.textContent = "🔄 Verifying...";
+                verificationStatus.className = "verification-status checking";
+                verificationStatus.style.display = "block";
+
+                google.script.run
+                    .withSuccessHandler(function (result) {
+                        if (result.exists) {
+                            lastVerifiedAsset = result;
+
+                            if (result.disabled) {
+                                verificationStatus.textContent =
+                                    "✗ Asset Disabled: " +
+                                    (result.disableReason || "Not available");
+                                verificationStatus.className =
+                                    "verification-status invalid";
+                                return;
+                            }
+
+                            var statusText =
+                                result.status === "Available"
+                                    ? "✓ Available"
+                                    : "⚠ Checked Out";
+                            if (result.currentUser) {
+                                statusText += " to " + result.currentUser;
+                            }
+                            verificationStatus.textContent =
+                                "✓ Valid " +
+                                result.deviceType +
+                                " - " +
+                                statusText;
+                            verificationStatus.className =
+                                "verification-status valid";
+                        } else {
+                            lastVerifiedAsset = null;
+                            verificationStatus.textContent =
+                                result.message || "✗ Not found";
+                            verificationStatus.className =
+                                "verification-status invalid";
+                        }
+                    })
+                    .withFailureHandler(function (error) {
+                        verificationStatus.textContent = "✗ Unable to verify";
+                        verificationStatus.className =
+                            "verification-status invalid";
+                    })
+                    .verifyAssetTag(assetTag);
+            }
+
+            form.addEventListener("submit", function (e) {
+                e.preventDefault();
+
+                var studentEmailEl = document.getElementById("studentEmail");
+                var assetTagEl = document.getElementById("assetTag");
+                var actionEl = document.querySelector(
+                    'input[name="action"]:checked',
+                );
+
+                if (!studentEmailEl || !assetTagEl) {
+                    showMessage(
+                        "Form validation error: Missing required elements",
+                        "error",
+                    );
+                    return;
+                }
+
+                if (!actionEl) {
+                    showMessage(
+                        "Please select an action (Check Out or Return)",
+                        "error",
+                    );
+                    return;
+                }
+
+                var studentEmailInput = studentEmailEl.value
+                    .trim()
+                    .toLowerCase();
+                var assetTag = assetTagEl.value;
+                var action = actionEl.value;
+
+                if (!studentEmailInput || !assetTag || !action) {
+                    showMessage("Please fill in all required fields", "error");
+                    return;
+                }
+
+                var studentEmail;
+                if (studentEmailInput.includes("@")) {
+                    studentEmail = studentEmailInput;
+                    if (!studentEmail.includes("@yourschool.org")) {
+                        showMessage(
+                            "Please use your school email (@yourschool.org)",
+                            "error",
+                        );
+                        return;
+                    }
+                } else {
+                    studentEmail = studentEmailInput + "@yourschool.org";
+                }
+
+                var emailRegex = /^[^\s@]+@[^\s@]+\.[^\s@]+$/;
+                if (!emailRegex.test(studentEmail)) {
+                    showMessage("Please enter a valid email format", "error");
+                    return;
+                }
+
+                if (!/^\d{6}$/.test(assetTag)) {
+                    showMessage("Asset tag must be exactly 6 digits", "error");
+                    return;
+                }
+
+                if (lastVerifiedAsset && lastVerifiedAsset.disabled) {
+                    showMessage("Cannot checkout disabled asset", "error");
+                    return;
+                }
+
+                formDataToSubmit = {
+                    studentEmail: studentEmail,
+                    assetTag: assetTag,
+                    action: action,
+                };
+
+                var confirmHTML =
+                    "<p><strong>Email:</strong> <span>" +
+                    htmlEncode(formDataToSubmit.studentEmail) +
+                    "</span></p>" +
+                    "<p><strong>Asset Tag:</strong> <span>" +
+                    htmlEncode(formDataToSubmit.assetTag) +
+                    "</span></p>" +
+                    "<p><strong>Action:</strong> <span>" +
+                    htmlEncode(formDataToSubmit.action) +
+                    "</span></p>";
+
+                if (lastVerifiedAsset && lastVerifiedAsset.exists) {
+                    confirmHTML +=
+                        "<p><strong>Device Type:</strong> <span>" +
+                        htmlEncode(lastVerifiedAsset.deviceType) +
+                        "</span></p>" +
+                        "<p><strong>Model:</strong> <span>" +
+                        htmlEncode(lastVerifiedAsset.model) +
+                        "</span></p>";
+                    if (lastVerifiedAsset.serialNumber) {
+                        confirmHTML +=
+                            "<p><strong>Serial:</strong> <span>" +
+                            htmlEncode(lastVerifiedAsset.serialNumber) +
+                            "</span></p>";
+                    }
+                    confirmHTML +=
+                        "<p><strong>Status:</strong> <span>" +
+                        htmlEncode(lastVerifiedAsset.status) +
+                        "</span></p>";
+                }
+
+                confirmHTML +=
+                    '<p style="margin-top:16px; padding-top:16px; border-top:1px solid rgba(255,255,255,0.1); font-size:12px; color:var(--text-muted);">' +
+                    "Updates both Google Sheets and IncidentIQ" +
+                    "</p>";
+
+                confirmationDetails.innerHTML = confirmHTML;
+                confirmationModal.style.display = "flex";
+            });
+
+            confirmYes.addEventListener("click", function () {
+                confirmationModal.style.display = "none";
+                submitToBackend();
+            });
+
+            confirmNo.addEventListener("click", function () {
+                confirmationModal.style.display = "none";
+            });
+
+            function submitToBackend() {
+                submitBtn.disabled = true;
+                submitBtn.textContent = "Processing...";
+                messageDiv.style.display = "none";
+
+                google.script.run
+                    .withSuccessHandler(handleSuccess)
+                    .withFailureHandler(handleFailure)
+                    .processCheckout(formDataToSubmit);
+            }
+
+            function showMessage(text, type) {
+                if (messageDiv) {
+                    messageDiv.textContent = text;
+                    messageDiv.className = "message " + type;
+                    messageDiv.style.display = "block";
+                }
+            }
+
+            function handleSuccess(response) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Review & Submit";
+
+                if (!response) {
+                    showMessage("No response from server", "error");
+                    return;
+                }
+
+                showMessage(
+                    response.message || "Operation completed",
+                    response.success ? "success" : "error",
+                );
+
+                if (response.success) {
+                    form.reset();
+                    verificationStatus.style.display = "none";
+                    lastVerifiedAsset = null;
+
+                    // PERFORMANCE OPTIMIZATION: Don't refresh assets after checkout
+                    // The asset cache is automatically updated on the server side
+                    // Removed: getAllAssetTags() call that added 4+ seconds
+                    // Assets will auto-refresh on next page load (15-minute cache)
+
+                    setTimeout(function () {
+                        if (messageDiv) {
+                            messageDiv.style.display = "none";
+                        }
+                    }, 7000);
+                }
+            }
+
+            function handleFailure(error) {
+                submitBtn.disabled = false;
+                submitBtn.textContent = "Review & Submit";
+
+                var errorMessage = "An error occurred. Please try again.";
+                if (error && error.message) {
+                    errorMessage = "Error: " + error.message;
+                } else if (typeof error === "string") {
+                    errorMessage = "Error: " + error;
+                }
+
+                showMessage(errorMessage, "error");
+            }
+        </script>
+    </body>
+</html>

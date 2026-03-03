@@ -1,0 +1,31 @@
+# CODEOWNERS
+#
+# This file defines who owns the code in this repository.
+# Code owners are automatically requested for review when someone opens a pull request.
+#
+# For more information, see:
+# https://docs.github.com/en/repositories/managing-your-repositorys-settings-and-features/customizing-your-repository/about-code-owners
+
+# Global owners - These users will be requested for review for all PRs
+* @HamCops
+
+# Security-related files
+/SECURITY.md @HamCops
+/src/security/ @HamCops
+/.github/workflows/security-scan.yml @HamCops
+
+# Configuration files
+/.env.example @HamCops
+/src/utils/Config.gs @HamCops
+
+# Core services
+/src/services/ @HamCops
+/src/repositories/ @HamCops
+
+# Frontend
+/frontend/ @HamCops
+
+# Documentation
+/README.md @HamCops
+/CONTRIBUTING.md @HamCops
+/GITHUB_SECURITY_SETUP.md @HamCops

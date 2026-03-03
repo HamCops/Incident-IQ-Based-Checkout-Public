@@ -1,0 +1,143 @@
+# ============================================
+# SECURITY - NEVER COMMIT THESE FILES
+# ============================================
+
+# Environment and configuration files
+.env
+.env.local
+.env.*.local
+config.local.js
+config.local.gs
+secrets.json
+credentials.json
+*-credentials.json
+*-secrets.json
+
+# API Keys and tokens
+**/apikeys/**
+**/tokens/**
+**/*-key.json
+**/*-token.txt
+**/*-api-key.*
+**/*-token.*
+api-keys.txt
+tokens.txt
+
+# Google Apps Script specific
+.clasp.json
+.claspignore
+appsscript.json.local
+
+# Personal configuration
+*.local.gs
+*.local.html
+**/local/**
+**/*-local.*
+
+# ============================================
+# DEVELOPMENT FILES
+# ============================================
+
+# Google Apps Script backups
+*.gs.backup
+*.gs.phase*
+*.before-*
+*_old.txt
+*_part*.txt
+
+# Development scripts
+*.py
+*.sh
+*.pyc
+__pycache__/
+
+# Temporary files
+*.tmp
+*.log
+*.swp
+*.swo
+*~
+*.bak
+*.backup
+
+# ============================================
+# IDE AND EDITOR FILES
+# ============================================
+
+# VS Code
+.vscode/
+*.code-workspace
+
+# IntelliJ IDEA
+.idea/
+*.iml
+*.iws
+
+# Sublime Text
+*.sublime-project
+*.sublime-workspace
+
+# Vim
+[._]*.s[a-v][a-z]
+[._]*.sw[a-p]
+[._]s[a-rt-v][a-z]
+[._]ss[a-gi-z]
+[._]sw[a-p]
+
+# ============================================
+# OPERATING SYSTEM FILES
+# ============================================
+
+# Mac OS
+.DS_Store
+.AppleDouble
+.LSOverride
+._*
+
+# Windows
+Thumbs.db
+ehthumbs.db
+Desktop.ini
+$RECYCLE.BIN/
+
+# Linux
+*~
+.directory
+
+# ============================================
+# NODE / NPM (if used for tooling)
+# ============================================
+
+node_modules/
+npm-debug.log*
+yarn-debug.log*
+yarn-error.log*
+package-lock.json
+yarn.lock
+
+# ============================================
+# LOGS AND DEBUGGING
+# ============================================
+
+logs/
+*.log
+npm-debug.log*
+yarn-debug.log*
+
+# ============================================
+# BUILD ARTIFACTS
+# ============================================
+
+dist/
+build/
+out/
+*.zip
+*.tar.gz
+
+# ============================================
+# TESTING
+# ============================================
+
+coverage/
+.nyc_output/
+*.test.local.gs

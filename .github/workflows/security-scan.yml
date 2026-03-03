@@ -1,0 +1,255 @@
+name: Security Scan
+
+on:
+  push:
+    branches: [ main, develop ]
+  pull_request:
+    branches: [ main ]
+  schedule:
+    # Run weekly security scan every Monday at 9 AM UTC
+    - cron: '0 9 * * 1'
+  workflow_dispatch:  # Allow manual triggers
+
+permissions:
+  contents: read
+  security-events: write
+  pull-requests: write
+
+jobs:
+  secret-scan:
+    name: Scan for Secrets and Credentials
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+        with:
+          fetch-depth: 0  # Full history for comprehensive scanning
+
+      - name: Run Gitleaks
+        uses: gitleaks/gitleaks-action@v2
+        env:
+          GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
+          GITLEAKS_LICENSE: ${{ secrets.GITLEAKS_LICENSE }}  # Optional: for gitleaks pro
+        continue-on-error: false  # Fail the build if secrets are found
+
+      - name: Run TruffleHog
+        uses: trufflesecurity/trufflehog@main
+        with:
+          path: ./
+          base: ${{ github.event.repository.default_branch }}
+          head: HEAD
+          extra_args: --only-verified --json
+
+  code-quality:
+    name: Code Quality and Security Analysis
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run CodeQL Analysis
+        uses: github/codeql-action/init@v3
+        with:
+          languages: javascript
+          queries: security-and-quality
+
+      - name: Perform CodeQL Analysis
+        uses: github/codeql-action/analyze@v3
+
+  dependency-check:
+    name: Check for Vulnerable Dependencies
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Run dependency review
+        uses: actions/dependency-review-action@v4
+        if: github.event_name == 'pull_request'
+        with:
+          fail-on-severity: moderate
+
+  sensitive-data-scan:
+    name: Scan for Sensitive Data Patterns
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Scan for email addresses
+        run: |
+          echo "Scanning for email addresses..."
+          if grep -r "@" . --include="*.gs" --include="*.html" | grep -v "example.com" | grep -v "yourschool.org" | grep -v "TODO" | grep -v "template" | grep -v "//"; then
+            echo "⚠️ WARNING: Found potential real email addresses"
+            echo "Please review and ensure no sensitive emails are committed"
+            exit 1
+          else
+            echo "✅ No sensitive email addresses found"
+          fi
+
+      - name: Scan for API keys and tokens
+        run: |
+          echo "Scanning for API keys and tokens..."
+          if grep -rE "(api[_-]?key|api[_-]?token|bearer|jwt)" . --include="*.gs" --include="*.json" -i | grep -v "TODO" | grep -v "example" | grep -v "your_" | grep -v "PropertiesService" | grep -v "comment"; then
+            echo "⚠️ WARNING: Found potential API keys or tokens"
+            echo "Please verify these are placeholders and not real credentials"
+            exit 1
+          else
+            echo "✅ No hardcoded API keys found"
+          fi
+
+      - name: Scan for GUIDs (potential IncidentIQ IDs)
+        run: |
+          echo "Scanning for hardcoded GUIDs..."
+          if grep -rE "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" . --include="*.gs" | grep -v "00000000-0000-0000-0000-000000000000" | grep -v "YOUR_" | grep -v "TODO"; then
+            echo "⚠️ WARNING: Found GUIDs that might be real IncidentIQ IDs"
+            echo "Please verify these are placeholders"
+            exit 1
+          else
+            echo "✅ No hardcoded GUIDs found"
+          fi
+
+      - name: Scan for phone numbers
+        run: |
+          echo "Scanning for phone numbers..."
+          if grep -rE "\d{3}[-.]?\d{3}[-.]?\d{4}" . --include="*.gs" | grep -v "555-123-4567" | grep -v "TODO" | grep -v "example"; then
+            echo "⚠️ WARNING: Found potential real phone numbers"
+            echo "Please verify these are placeholders"
+            exit 1
+          else
+            echo "✅ No real phone numbers found"
+          fi
+
+      - name: Scan for addresses
+        run: |
+          echo "Scanning for physical addresses..."
+          if grep -rE "\d+\s+[A-Z][a-z]+\s+(Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Boulevard|Blvd)" . --include="*.gs" | grep -v "123 Main" | grep -v "TODO" | grep -v "example"; then
+            echo "⚠️ WARNING: Found potential real addresses"
+            echo "Please verify these are placeholders"
+            exit 1
+          else
+            echo "✅ No real addresses found"
+          fi
+
+  configuration-check:
+    name: Verify Configuration Files
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Check for .env files
+        run: |
+          echo "Checking for accidentally committed .env files..."
+          if find . -name ".env" -o -name ".env.local" -o -name "*.env"; then
+            echo "❌ ERROR: Found .env files - these should never be committed!"
+            exit 1
+          else
+            echo "✅ No .env files found"
+          fi
+
+      - name: Verify .env.example exists
+        run: |
+          if [ ! -f ".env.example" ]; then
+            echo "❌ ERROR: .env.example is missing"
+            exit 1
+          else
+            echo "✅ .env.example exists"
+          fi
+
+      - name: Verify SECURITY.md exists
+        run: |
+          if [ ! -f "SECURITY.md" ]; then
+            echo "⚠️ WARNING: SECURITY.md is missing"
+            echo "Please create a security policy document"
+          else
+            echo "✅ SECURITY.md exists"
+          fi
+
+      - name: Verify LICENSE exists
+        run: |
+          if [ ! -f "LICENSE" ]; then
+            echo "⚠️ WARNING: LICENSE file is missing"
+            echo "Please add an appropriate license"
+          else
+            echo "✅ LICENSE exists"
+          fi
+
+      - name: Check .gitignore coverage
+        run: |
+          echo "Verifying .gitignore includes sensitive patterns..."
+          patterns=(".env" "secrets.json" "credentials.json" "*.local.gs" "*-key.json")
+          missing=()
+
+          for pattern in "${patterns[@]}"; do
+            if ! grep -q "$pattern" .gitignore; then
+              missing+=("$pattern")
+            fi
+          done
+
+          if [ ${#missing[@]} -gt 0 ]; then
+            echo "⚠️ WARNING: .gitignore missing patterns: ${missing[*]}"
+          else
+            echo "✅ .gitignore properly configured"
+          fi
+
+  security-report:
+    name: Generate Security Report
+    runs-on: ubuntu-latest
+    needs: [secret-scan, sensitive-data-scan, configuration-check]
+    if: always()
+
+    steps:
+      - name: Checkout code
+        uses: actions/checkout@v4
+
+      - name: Generate security summary
+        run: |
+          echo "## 🔒 Security Scan Summary" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "**Scan Date:** $(date -u)" >> $GITHUB_STEP_SUMMARY
+          echo "**Commit:** ${{ github.sha }}" >> $GITHUB_STEP_SUMMARY
+          echo "**Branch:** ${{ github.ref_name }}" >> $GITHUB_STEP_SUMMARY
+          echo "" >> $GITHUB_STEP_SUMMARY
+
+          if [ "${{ needs.secret-scan.result }}" == "success" ] && \
+             [ "${{ needs.sensitive-data-scan.result }}" == "success" ] && \
+             [ "${{ needs.configuration-check.result }}" == "success" ]; then
+            echo "✅ **All security checks passed!**" >> $GITHUB_STEP_SUMMARY
+          else
+            echo "❌ **Some security checks failed. Please review the logs.**" >> $GITHUB_STEP_SUMMARY
+          fi
+
+          echo "" >> $GITHUB_STEP_SUMMARY
+          echo "### Scan Results" >> $GITHUB_STEP_SUMMARY
+          echo "- Secret Scan: ${{ needs.secret-scan.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Sensitive Data: ${{ needs.sensitive-data-scan.result }}" >> $GITHUB_STEP_SUMMARY
+          echo "- Configuration: ${{ needs.configuration-check.result }}" >> $GITHUB_STEP_SUMMARY
+
+      - name: Comment on PR
+        if: github.event_name == 'pull_request'
+        uses: actions/github-script@v7
+        with:
+          script: |
+            const output = `## 🔒 Security Scan Results
+
+            **Status:** ${{ needs.secret-scan.result == 'success' && needs.sensitive-data-scan.result == 'success' && needs.configuration-check.result == 'success' && '✅ Passed' || '❌ Failed' }}
+
+            ### Check Results
+            - Secret Scan: ${{ needs.secret-scan.result }}
+            - Sensitive Data Scan: ${{ needs.sensitive-data-scan.result }}
+            - Configuration Check: ${{ needs.configuration-check.result }}
+
+            Please review the detailed logs for any warnings or errors.`;
+
+            github.rest.issues.createComment({
+              issue_number: context.issue.number,
+              owner: context.repo.owner,
+              repo: context.repo.repo,
+              body: output
+            });

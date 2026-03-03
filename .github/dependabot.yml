@@ -1,0 +1,38 @@
+# Dependabot configuration for automated dependency updates
+# https://docs.github.com/en/code-security/dependabot/dependabot-version-updates
+
+version: 2
+updates:
+  # Maintain GitHub Actions dependencies
+  - package-ecosystem: "github-actions"
+    directory: "/"
+    schedule:
+      interval: "weekly"
+      day: "monday"
+      time: "09:00"
+    open-pull-requests-limit: 5
+    labels:
+      - "dependencies"
+      - "github-actions"
+      - "automated"
+    commit-message:
+      prefix: "chore"
+      include: "scope"
+    reviewers:
+      - "HamCops"
+    assignees:
+      - "HamCops"
+
+# Note: This project uses Google Apps Script which doesn't have a traditional
+# package manager like npm or pip. If you add dependencies in the future
+# (e.g., npm packages for testing/linting), add them here.
+#
+# Example for npm (if you add package.json in the future):
+# - package-ecosystem: "npm"
+#   directory: "/"
+#   schedule:
+#     interval: "weekly"
+#   open-pull-requests-limit: 10
+#   labels:
+#     - "dependencies"
+#     - "npm"
