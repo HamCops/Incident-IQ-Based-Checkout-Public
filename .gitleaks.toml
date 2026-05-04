@@ -1,0 +1,16 @@
+title = "Incident-IQ Checkout — gitleaks config"
+
+# Keep upstream default ruleset, then layer allowlist on top.
+[extend]
+useDefault = true
+
+# Test fixtures used by safeLog() in src/security/Security.gs to verify
+# the redactor catches Stripe-style keys and JWT-shaped tokens.
+# These are dummy values, not credentials.
+[[allowlists]]
+description = "safeLog() redactor test fixtures"
+paths = ['''src/security/Security\.gs''']
+regexes = [
+    '''sk_live_1234567890abcdef''',
+    '''eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9eyJzdWIiOiIxMjM0NTY3ODkwIiwibmFtZSI6IkpvaG4gRG9lIiwiaWF0IjoxNTE2MjM5MDIyfQ''',
+]
