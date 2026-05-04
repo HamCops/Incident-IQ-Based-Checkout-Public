@@ -68,7 +68,26 @@ jobs:
 
       - name: Run dependency review
         uses: actions/dependency-review-action@v4
-        if: github.event_name == 'pull_request'
+        # Only run on PRs and only when a dependency manifest exists. This is an
+        # Apps Script project with no manifests; the action errors with
+        # "Dependency review is not supported on this repository" otherwise.
+        if: |
+          github.event_name == 'pull_request' &&
+          hashFiles(
+            '**/package.json',
+            '**/package-lock.json',
+            '**/yarn.lock',
+            '**/pnpm-lock.yaml',
+            '**/requirements.txt',
+            '**/Pipfile.lock',
+            '**/poetry.lock',
+            '**/Gemfile.lock',
+            '**/go.sum',
+            '**/Cargo.lock',
+            '**/pom.xml',
+            '**/build.gradle',
+            '**/build.gradle.kts'
+          ) != ''
         with:
           fail-on-severity: moderate
 
@@ -83,10 +102,14 @@ jobs:
       - name: Scan for email addresses
         run: |
           echo "Scanning for email addresses..."
+          # grep -n outputs path:lineno:content — strip lines whose content begins
+          # with //, *, or <!-- (line comments and JSDoc) plus known placeholder
+          # domains and JSDoc tags so we only flag plausible real addresses.
           if grep -rEn "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}" . \
                --include="*.gs" --include="*.html" \
-             | grep -vE "(example\.com|yourschool\.org)" \
+             | grep -vE "@(example\.(com|org|net)|yourschool\.org|domain\.com|test\.com|localhost|evil\.com|fake\.com|attacker)" \
              | grep -vE "@(param|returns?|throws|see|link|deprecated|since|version|author|todo|example)\b" \
+             | grep -vE "^[^:]+:[0-9]+:[[:space:]]*(//|\*|<!--)" \
              | grep -vE "(TODO|template)"; then
             echo "⚠️ WARNING: Found potential real email addresses"
             echo "Please review and ensure no sensitive emails are committed"
