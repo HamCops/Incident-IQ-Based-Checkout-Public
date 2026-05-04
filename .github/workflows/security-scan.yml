@@ -83,7 +83,11 @@ jobs:
       - name: Scan for email addresses
         run: |
           echo "Scanning for email addresses..."
-          if grep -r "@" . --include="*.gs" --include="*.html" | grep -v "example.com" | grep -v "yourschool.org" | grep -v "TODO" | grep -v "template" | grep -v "//"; then
+          if grep -rEn "[A-Za-z0-9._%+-]+@[A-Za-z0-9.-]+\.[A-Za-z]{2,}" . \
+               --include="*.gs" --include="*.html" \
+             | grep -vE "(example\.com|yourschool\.org)" \
+             | grep -vE "@(param|returns?|throws|see|link|deprecated|since|version|author|todo|example)\b" \
+             | grep -vE "(TODO|template)"; then
             echo "⚠️ WARNING: Found potential real email addresses"
             echo "Please review and ensure no sensitive emails are committed"
             exit 1
@@ -146,12 +150,15 @@ jobs:
       - name: Check for .env files
         run: |
           echo "Checking for accidentally committed .env files..."
-          if find . -name ".env" -o -name ".env.local" -o -name "*.env"; then
+          matches=$(find . -path ./node_modules -prune -o \
+            \( -name ".env" -o -name ".env.local" -o -name "*.env" \) \
+            -not -name ".env.example" -print)
+          if [ -n "$matches" ]; then
             echo "❌ ERROR: Found .env files - these should never be committed!"
+            echo "$matches"
             exit 1
-          else
-            echo "✅ No .env files found"
           fi
+          echo "✅ No .env files found"
 
       - name: Verify .env.example exists
         run: |
