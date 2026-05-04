@@ -118,49 +118,17 @@ jobs:
             echo "✅ No sensitive email addresses found"
           fi
 
-      - name: Scan for API keys and tokens
-        run: |
-          echo "Scanning for API keys and tokens..."
-          if grep -rE "(api[_-]?key|api[_-]?token|bearer|jwt)" . --include="*.gs" --include="*.json" -i | grep -v "TODO" | grep -v "example" | grep -v "your_" | grep -v "PropertiesService" | grep -v "comment"; then
-            echo "⚠️ WARNING: Found potential API keys or tokens"
-            echo "Please verify these are placeholders and not real credentials"
-            exit 1
-          else
-            echo "✅ No hardcoded API keys found"
-          fi
-
-      - name: Scan for GUIDs (potential IncidentIQ IDs)
-        run: |
-          echo "Scanning for hardcoded GUIDs..."
-          if grep -rE "[0-9a-f]{8}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{4}-[0-9a-f]{12}" . --include="*.gs" | grep -v "00000000-0000-0000-0000-000000000000" | grep -v "YOUR_" | grep -v "TODO"; then
-            echo "⚠️ WARNING: Found GUIDs that might be real IncidentIQ IDs"
-            echo "Please verify these are placeholders"
-            exit 1
-          else
-            echo "✅ No hardcoded GUIDs found"
-          fi
-
-      - name: Scan for phone numbers
-        run: |
-          echo "Scanning for phone numbers..."
-          if grep -rE "\d{3}[-.]?\d{3}[-.]?\d{4}" . --include="*.gs" | grep -v "555-123-4567" | grep -v "TODO" | grep -v "example"; then
-            echo "⚠️ WARNING: Found potential real phone numbers"
-            echo "Please verify these are placeholders"
-            exit 1
-          else
-            echo "✅ No real phone numbers found"
-          fi
-
-      - name: Scan for addresses
-        run: |
-          echo "Scanning for physical addresses..."
-          if grep -rE "\d+\s+[A-Z][a-z]+\s+(Street|St|Avenue|Ave|Road|Rd|Drive|Dr|Lane|Ln|Boulevard|Blvd)" . --include="*.gs" | grep -v "123 Main" | grep -v "TODO" | grep -v "example"; then
-            echo "⚠️ WARNING: Found potential real addresses"
-            echo "Please verify these are placeholders"
-            exit 1
-          else
-            echo "✅ No real addresses found"
-          fi
+      # Note: previously this job also ran custom regex sub-steps for
+      # "API keys and tokens", "GUIDs", "phone numbers", and "addresses".
+      # Those steps fired false positives on every commit because their
+      # patterns matched identifiers and code structure (variable names,
+      # function names, JSDoc comments, header constants) instead of literal
+      # credentials. Two of them (`phone`, `addresses`) also used `\d` under
+      # `grep -E`, where `\d` is interpreted as the literal character `d`,
+      # so they could not have worked as written. Real secret detection is
+      # delegated to the Gitleaks and TruffleHog steps in `secret-scan`,
+      # which match credential value patterns (high entropy, known prefixes,
+      # JWT structure) rather than identifier names.
 
   configuration-check:
     name: Verify Configuration Files
