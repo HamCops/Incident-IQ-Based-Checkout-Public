@@ -35,10 +35,14 @@ jobs:
 
       - name: Run TruffleHog
         uses: trufflesecurity/trufflehog@main
+        # Use filesystem mode (no base/head). The action errors with
+        # "BASE and HEAD commits are the same" on push events to the default
+        # branch when both inputs resolve to that branch. Gitleaks above
+        # already covers full git history via fetch-depth: 0, so leaving
+        # TruffleHog as a working-tree scan provides a clean defense-in-depth
+        # split without breaking on push or schedule events.
         with:
           path: ./
-          base: ${{ github.event.repository.default_branch }}
-          head: HEAD
           extra_args: --only-verified --json
 
   code-quality:
